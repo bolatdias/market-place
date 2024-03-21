@@ -1,7 +1,6 @@
 package com.example.marketplace.config;
 
-
-import com.example.marketplace.model.User;
+import com.example.marketplace.security.UserPrincipal;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.domain.AuditorAware;
@@ -15,11 +14,13 @@ import java.util.Optional;
 @Configuration
 @EnableJpaAuditing
 public class AuditingConfig {
+
     @Bean
     public AuditorAware<Long> auditorProvider() {
         return new SpringSecurityAuditAwareImpl();
     }
 }
+
 class SpringSecurityAuditAwareImpl implements AuditorAware<Long> {
 
     @Override
@@ -32,7 +33,7 @@ class SpringSecurityAuditAwareImpl implements AuditorAware<Long> {
             return Optional.empty();
         }
 
-        User userPrincipal = (User) authentication.getPrincipal();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
         return Optional.ofNullable(userPrincipal.getId());
     }

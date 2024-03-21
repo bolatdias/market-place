@@ -1,10 +1,11 @@
 package com.example.marketplace.model.audit;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.MappedSuperclass;
-import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
+
+import jakarta.persistence.MappedSuperclass;
+
 
 
 @MappedSuperclass
@@ -12,7 +13,6 @@ import org.springframework.data.annotation.LastModifiedBy;
         value = {"createdBy", "updatedBy"},
         allowGetters = true
 )
-@Data
 public abstract class UserDateAudit extends DateAudit {
 
     @CreatedBy
@@ -20,4 +20,20 @@ public abstract class UserDateAudit extends DateAudit {
 
     @LastModifiedBy
     private Long updatedBy;
+
+    public Long getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Long getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(Long updatedBy) {
+        this.updatedBy = updatedBy;
+    }
 }

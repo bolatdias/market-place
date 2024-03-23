@@ -1,104 +1,31 @@
 package com.example.marketplace.controller;
 
-import com.example.marketplace.exception.AppException;
-import com.example.marketplace.model.Role;
-import com.example.marketplace.model.RoleName;
-import com.example.marketplace.model.User;
-import com.example.marketplace.payload.ApiResponse;
-import com.example.marketplace.payload.JwtAuthenticationResponse;
-import com.example.marketplace.payload.LoginRequest;
-import com.example.marketplace.payload.SignUpRequest;
-import com.example.marketplace.repository.RoleRepository;
-import com.example.marketplace.repository.UserRepository;
-import com.example.marketplace.security.JwtTokenProvider;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import com.example.marketplace.payload.CreateUserInput;
+import com.example.marketplace.payload.CreateUserPayload;
+import com.example.marketplace.payload.Token;
+import com.example.marketplace.service.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.stereotype.Controller;
 
-import javax.validation.Valid;
-import java.net.URI;
-import java.util.Collections;
 
-@RestController
-@RequestMapping("/api/auth")
+@Controller
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Autowired
-    AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    JwtTokenProvider tokenProvider;
-
-    @PostMapping("/sign-in")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsernameOrEmail(),
-                        loginRequest.getPassword()
-                )
-        );
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String jwt = tokenProvider.generateToken(authentication);
-        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+    @MutationMapping
+    public CreateUserPayload createUser(@Argument("input") CreateUserInput input) {
+        return new CreateUserPayload(authService.createUser(input));
     }
 
-    @GetMapping("/")
-    public ResponseEntity<?> hello() {
-        return ResponseEntity.ok().body("Dias");
-    }
-
-    @PostMapping("/sign-up")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-            return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
-                    HttpStatus.BAD_REQUEST);
-        }
-
-
-
-        // Creating user's account
-        User user = new User(signUpRequest.getName(), signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword());
-
-
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
-
-
-        user.setRoles(Collections.singleton(userRole));
-
-        User result = userRepository.save(user);
-
-
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentContextPath().path("/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
-
-        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    @QueryMapping
+    public Token getAccessToken(
+            @Argument("usernameOrEmail") String usernameOrEmail,
+            @Argument("password") String password) {
+        return authService.authenticateUser(usernameOrEmail, password);
     }
 }

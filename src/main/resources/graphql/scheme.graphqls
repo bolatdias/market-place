@@ -1,0 +1,56 @@
+scalar Date
+
+type Query {
+    checkUsernameAvailability(username: String): Boolean
+    checkEmailAvailability(email:String) : Boolean
+    getCurrentUser:User
+    getAccessToken(usernameOrEmail:String!, password:String!):Token
+}
+
+type Token{
+    tokenType:String!
+    accessToken:String!
+}
+
+type Mutation {
+    createUser(input: CreateUserInput!): CreateUserPayload
+}
+
+
+type CreateUserPayload{
+    user:User
+}
+
+
+input CreateUserInput{
+    name:String!
+    username:String!
+    email:String!
+    password:String!
+}
+
+type User{
+    id:ID!
+    name:String
+    username:String!
+    email:String!
+    roles:[Role]
+    createdAt: Date
+    updatedAt: Date
+}
+type Role{
+    id:ID!
+    name:RoleName
+}
+
+enum RoleName{
+    ROLE_USER
+    ROLE_ADMIN
+}
+
+
+
+schema{
+    query: Query
+    mutation: Mutation
+}

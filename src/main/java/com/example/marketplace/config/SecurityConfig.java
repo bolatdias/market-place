@@ -78,6 +78,10 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
                         .permitAll()
+                        .requestMatchers("/graphql")
+                        .permitAll()
+                        .requestMatchers("/graphiql")
+                        .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/marketplace/**", "/api/users/**")
                         .permitAll()
                         .anyRequest()
@@ -85,18 +89,13 @@ public class SecurityConfig {
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+
+//        http
+//                .csrf(c -> c.disable())
+//                .authorizeRequests(requests -> requests.anyRequest().permitAll())
+//                .httpBasic(Customizer.withDefaults());
         return http.build();
 
 
-//        http
-//                .authorizeHttpRequests(
-//                        request -> request
-//                                .requestMatchers("/").permitAll()
-//                                .anyRequest().authenticated()
-//                )
-//                .formLogin(Customizer.withDefaults())
-//                .httpBasic(Customizer.withDefaults());
-//        return http.build();
-//    }
     }
 }

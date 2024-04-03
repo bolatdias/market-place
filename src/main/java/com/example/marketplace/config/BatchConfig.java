@@ -65,18 +65,17 @@ public class BatchConfig {
 
     @Bean
     public ItemWriter<Product> writer() {
+        String sqlQuery = "INSERT INTO PRODUCT(id, title, description, price, category, brand, stock) " +
+                "VALUES (:id, :title, :description, :price, :category, :brand, :stock);";
+
         JdbcBatchItemWriter<Product> writer = new JdbcBatchItemWriter<>();
         writer.setDataSource(this.dataSource);
-        writer.setSql("INSERT INTO PRODUCT(id, title, description, price, category) VALUES (:id, :title, :description, :price, :category)");
+
+        writer.setSql(sqlQuery);
         writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
         writer.afterPropertiesSet();
         return writer;
 
-//        return items -> {
-//            for (Product product : items) {
-//                System.out.println("Writing User: " + product);
-//            }
-//        };
     }
 
 

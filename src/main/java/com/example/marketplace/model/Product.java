@@ -2,11 +2,11 @@ package com.example.marketplace.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.validation.constraints.Size;
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,14 +17,20 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+
     private String description;
     private int price;
-//    private double discountPercentage;
+
+//    @OneToMany(mappedBy = "product")
+//    private Set<Category> category;
+
     private String category;
+    private String brand;
+    private int stock;
+
+//    private double discountPercentage;
 
 //    private double rating;
-//    private int stock;
-//    private String brand;
 //    private String thumbnail;
 //    private String[] images;
 }

@@ -73,6 +73,7 @@
         </dependency>
 
 
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>
@@ -111,9 +112,9 @@
 
 
         <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>1.6.0.Beta1</version>
+            <groupId>org.springframework.batch</groupId>
+            <artifactId>spring-batch-core</artifactId>
+            <version>5.1.1</version>
         </dependency>
     </dependencies>
 

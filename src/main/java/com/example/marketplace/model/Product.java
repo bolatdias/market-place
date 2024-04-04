@@ -11,6 +11,14 @@ import java.util.Set;
 
 @Data
 @Entity
+@NamedEntityGraph(
+        name = "Product.category",
+        attributeNodes = @NamedAttributeNode("category")
+)
+@NamedEntityGraph(
+        name = "Product.images",
+        attributeNodes = @NamedAttributeNode("images")
+)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Product {
 

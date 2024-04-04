@@ -6,8 +6,9 @@ type Query {
     getCurrentUser:User
     getAccessToken(usernameOrEmail:String!, password:String!):Token
 
-    findAllProducts:[Product]
-    findAllCategories:[Category]
+
+    products:[Product]
+    categories:[Category]
 }
 
 

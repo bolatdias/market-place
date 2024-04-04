@@ -1,17 +1,16 @@
 package com.example.marketplace.config;
 
-
+import com.example.marketplace.batch.CustomProductItemWriter;
+import com.example.marketplace.model.Category;
 import com.example.marketplace.model.Product;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import com.example.marketplace.payload.ProductBatch;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.JobFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.core.step.builder.StepBuilderHelper;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
@@ -22,6 +21,7 @@ import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.json.JacksonJsonObjectReader;
 import org.springframework.batch.item.json.JsonItemReader;
 import org.springframework.batch.item.json.builder.JsonItemReaderBuilder;
+import org.springframework.batch.item.support.CompositeItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,9 +45,9 @@ public class BatchConfig {
     private DataSource dataSource;
 
     @Bean
-    public JsonItemReader<Product> reader() {
-        return new JsonItemReaderBuilder<Product>()
-                .jsonObjectReader(new JacksonJsonObjectReader<>(Product.class))
+    public JsonItemReader<ProductBatch> reader() {
+        return new JsonItemReaderBuilder<ProductBatch>()
+                .jsonObjectReader(new JacksonJsonObjectReader<>(ProductBatch.class))
                 .name("jsonItemReader")
                 .resource(new ClassPathResource("input/products.json"))
                 .build();
@@ -55,7 +55,7 @@ public class BatchConfig {
     }
 
     @Bean
-    public ItemProcessor<Product, Product> processor() {
+    public ItemProcessor<ProductBatch, ProductBatch> processor() {
         return product -> {
             // Any logic
             return product;
@@ -64,25 +64,15 @@ public class BatchConfig {
 
 
     @Bean
-    public ItemWriter<Product> writer() {
-        String sqlQuery = "INSERT INTO PRODUCT(id, title, description, price, category, brand, stock) " +
-                "VALUES (:id, :title, :description, :price, :category, :brand, :stock);";
-
-        JdbcBatchItemWriter<Product> writer = new JdbcBatchItemWriter<>();
-        writer.setDataSource(this.dataSource);
-
-        writer.setSql(sqlQuery);
-        writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
-        writer.afterPropertiesSet();
-        return writer;
-
+    public ItemWriter<ProductBatch> writer() {
+        return new CustomProductItemWriter(dataSource);
     }
 
 
     @Bean
     public Step step1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("step", jobRepository)
-                .<Product, Product>chunk(10, transactionManager)
+                .<ProductBatch, ProductBatch>chunk(10, transactionManager)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())

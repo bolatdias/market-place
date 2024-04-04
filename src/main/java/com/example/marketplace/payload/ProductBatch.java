@@ -1,29 +1,19 @@
-package com.example.marketplace.model;
+package com.example.marketplace.payload;
 
 
+import com.example.marketplace.model.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.validation.constraints.Size;
-import java.util.Set;
-
 @Data
-@Entity
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class ProductBatch {
     private Long id;
     private String title;
-
     private String description;
     private int price;
-
-    @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    private String category;
 
     private String brand;
     private int stock;

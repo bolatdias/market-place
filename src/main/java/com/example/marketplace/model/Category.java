@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.checkerframework.common.aliasing.qual.Unique;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,6 @@ public class Category {
     private String title;
 
     @OneToMany(mappedBy = "category")
-    private Set<Product> product;
-
+    private List<Product> products;
 
 }

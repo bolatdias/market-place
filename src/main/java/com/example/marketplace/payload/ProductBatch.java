@@ -17,10 +17,10 @@ public class ProductBatch {
 
     private String brand;
     private int stock;
+    private String[] images;
 
 //    private double discountPercentage;
 
 //    private double rating;
 //    private String thumbnail;
-//    private String[] images;
 }

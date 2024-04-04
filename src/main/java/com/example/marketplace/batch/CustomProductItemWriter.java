@@ -18,8 +18,8 @@ public class CustomProductItemWriter implements ItemWriter<ProductBatch> {
     private static final String CATEGORY_INSERT_QUERY = "INSERT INTO CATEGORY(title) VALUES (?)";
     private static final String PRODUCT_INSERT_QUERY = "INSERT INTO PRODUCT(id, title, description, price, category_id, brand, stock) " +
             "VALUES (?, ?, ?, ?, ?, ?, ?)";
-
     private static final String CATEGORY_ID_QUERY = "SELECT c.id FROM CATEGORY c WHERE title=?";
+    private static final String IMAGE_INSERT_QUERY = "INSERT INTO IMAGE(url, product_id) VALUES(?,?)";
 
     public CustomProductItemWriter(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -30,6 +30,11 @@ public class CustomProductItemWriter implements ItemWriter<ProductBatch> {
         for (ProductBatch item : chunk) {
             Long categoryId = insertCategory(item.getCategory());
             insertProduct(item, categoryId);
+
+            for (String url : item.getImages()) {
+                insertImage(url, item.getId());
+            }
+
         }
     }
 
@@ -46,6 +51,10 @@ public class CustomProductItemWriter implements ItemWriter<ProductBatch> {
     private void insertProduct(ProductBatch product, Long categoryId) {
         jdbcTemplate.update(PRODUCT_INSERT_QUERY,
                 product.getId(), product.getTitle(), product.getDescription(), product.getPrice(), categoryId, product.getBrand(), product.getStock());
+    }
+
+    private void insertImage(String url, Long product_id) {
+        jdbcTemplate.update(IMAGE_INSERT_QUERY, url, product_id);
     }
 
 

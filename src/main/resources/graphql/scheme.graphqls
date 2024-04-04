@@ -5,8 +5,33 @@ type Query {
     checkEmailAvailability(email:String) : Boolean
     getCurrentUser:User
     getAccessToken(usernameOrEmail:String!, password:String!):Token
+
+    findAllProducts:[Product]
+    findAllCategories:[Category]
 }
 
+
+type Product{
+    id:ID!
+    title:String
+    description: String
+    price: Int
+    category: Category
+    brand:String
+    stock: Int
+    images:[Image]
+}
+
+type Category{
+    id:ID!
+    title:String
+    products:[Product]
+}
+type Image{
+    id:ID!
+    url:String
+    product:Product
+}
 type Token{
     tokenType:String!
     accessToken:String!
@@ -23,7 +48,7 @@ type CreateUserPayload{
 
 
 input CreateUserInput{
-    name:String!
+    name:String
     username:String!
     email:String!
     password:String!

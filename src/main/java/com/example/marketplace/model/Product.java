@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -28,6 +29,8 @@ public class Product {
     private String brand;
     private int stock;
 
+    @OneToMany(mappedBy = "product")
+    private List<Image> images;
 //    private double discountPercentage;
 
 //    private double rating;

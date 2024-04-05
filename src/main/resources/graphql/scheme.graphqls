@@ -7,10 +7,18 @@ type Query {
     getAccessToken(usernameOrEmail:String!, password:String!):Token
 
 
+
     products:[Product]
+    product(id:ID!):Product
+
     categories:[Category]
+    category(id:ID!):Category
 }
 
+type Mutation {
+    createUser(input: CreateUserInput!): CreateUserPayload
+    rateProduct(input:ProductRatingInput):ProductRating
+}
 
 type Product{
     id:ID!
@@ -21,6 +29,19 @@ type Product{
     brand:String
     stock: Int
     images:[Image]
+}
+
+input ProductRatingInput{
+    rating:Int
+    comment:String
+    productId:Int
+}
+
+type ProductRating{
+    rating:Int
+    comment:String
+    user:User
+    product:Product
 }
 
 type Category{
@@ -38,9 +59,6 @@ type Token{
     accessToken:String!
 }
 
-type Mutation {
-    createUser(input: CreateUserInput!): CreateUserPayload
-}
 
 
 type CreateUserPayload{

@@ -7,6 +7,7 @@ import com.example.marketplace.model.Product;
 import com.example.marketplace.model.ProductRating;
 import com.example.marketplace.model.User;
 import com.example.marketplace.payload.ProductRatingInput;
+import com.example.marketplace.payload.SearchProductInput;
 import com.example.marketplace.repository.CategoryRepository;
 import com.example.marketplace.repository.ProductRatingRepository;
 import com.example.marketplace.repository.ProductRepository;
@@ -68,5 +69,9 @@ public class ProductService {
         productRating.setComment(input.comment());
 
         return productRatingRepository.save(productRating);
+    }
+
+    public List<Product> searchProduct(SearchProductInput input) {
+        return productRepository.searchProducts(input.query());
     }
 }

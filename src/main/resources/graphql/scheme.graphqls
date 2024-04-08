@@ -7,9 +7,9 @@ type Query {
     getAccessToken(usernameOrEmail:String!, password:String!):Token
 
 
-
     products:[Product]
     product(id:ID!):Product
+    searchProducts(input:SearchProductInput):[Product]
 
     categories:[Category]
     category(id:ID!):Category
@@ -38,11 +38,17 @@ input ProductRatingInput{
     productId:Int
 }
 
+input SearchProductInput{
+    query:String
+}
+
 type ProductRating{
     rating:Int
     comment:String
     user:User
     product:Product
+    createdAt: Date
+    updatedAt: Date
 }
 
 type Category{

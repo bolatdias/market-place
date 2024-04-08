@@ -6,6 +6,7 @@ import com.example.marketplace.model.Product;
 import com.example.marketplace.model.ProductRating;
 import com.example.marketplace.model.User;
 import com.example.marketplace.payload.ProductRatingInput;
+import com.example.marketplace.payload.SearchProductInput;
 import com.example.marketplace.security.CurrentUser;
 import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.service.ProductService;
@@ -59,5 +60,11 @@ public class ProductController {
     @QueryMapping
     public List<Category> categories() {
         return productService.findAllCategories();
+    }
+
+    @QueryMapping
+    public List<Product> searchProducts(
+            @Argument("input") SearchProductInput input) {
+        return productService.searchProduct(input);
     }
 }

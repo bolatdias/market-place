@@ -37,8 +37,8 @@ import javax.sql.DataSource;
 @EnableBatchProcessing
 public class BatchConfig {
 
-    @Value("input/products.json")
-    private Resource inputProducts;
+
+    private String inputProducts = "input/products.json";
 
 
     @Autowired
@@ -49,7 +49,7 @@ public class BatchConfig {
         return new JsonItemReaderBuilder<ProductBatch>()
                 .jsonObjectReader(new JacksonJsonObjectReader<>(ProductBatch.class))
                 .name("jsonItemReader")
-                .resource(new ClassPathResource("input/products.json"))
+                .resource(new ClassPathResource(inputProducts))
                 .build();
 
     }

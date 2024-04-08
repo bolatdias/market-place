@@ -1,6 +1,7 @@
 package com.example.marketplace.model;
 
 
+import com.example.marketplace.model.audit.DateAudit;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,7 +9,8 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Data
-public class ProductRating {
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
+public class ProductRating  extends DateAudit {
 
 
     @Id

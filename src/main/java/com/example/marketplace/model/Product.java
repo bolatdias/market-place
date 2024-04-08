@@ -39,6 +39,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<Image> images;
+
+    @OneToMany(mappedBy = "product")
+    private List<ProductRating> productRatings;
 //    private double discountPercentage;
 
 //    private double rating;

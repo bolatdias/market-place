@@ -29,6 +29,7 @@ type Product{
     brand:String
     stock: Int
     images:[Image]
+    productRatings:[ProductRating]
 }
 
 input ProductRatingInput{
@@ -79,6 +80,7 @@ type User{
     username:String!
     email:String!
     roles:[Role]
+    productRatings:[ProductRating]
     createdAt: Date
     updatedAt: Date
 }

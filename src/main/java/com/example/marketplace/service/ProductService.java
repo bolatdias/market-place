@@ -62,6 +62,7 @@ public class ProductService {
         );
 
         ProductRating productRating = new ProductRating();
+        productRating.setRating(input.rating());
         productRating.setProduct(product);
         productRating.setUser(user);
         productRating.setComment(input.comment());

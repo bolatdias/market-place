@@ -3,7 +3,10 @@ package com.example.marketplace.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.annotations.Formula;
+import org.springframework.data.jpa.repository.Query;
 
 import javax.validation.constraints.Size;
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.Set;
         attributeNodes = @NamedAttributeNode("images")
 )
 @JsonIgnoreProperties(ignoreUnknown = true)
+
 public class Product {
 
     @Id
@@ -42,6 +46,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product")
     private List<ProductRating> productRatings;
+
+    @Formula("(SELECT AVG(pr.rating) FROM product_rating pr WHERE pr.product_id = id)")
+    private Float rating;
 //    private double discountPercentage;
 
 //    private double rating;

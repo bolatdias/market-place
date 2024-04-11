@@ -30,6 +30,7 @@ type Product{
     stock: Int
     images:[Image]
     productRatings:[ProductRating]
+    rating:Float
 }
 
 input ProductRatingInput{

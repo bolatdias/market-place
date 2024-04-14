@@ -1,6 +1,7 @@
 package com.example.marketplace.service;
 
 
+import com.example.marketplace.exception.AppException;
 import com.example.marketplace.exception.ResourceNotFoundException;
 import com.example.marketplace.model.Category;
 import com.example.marketplace.model.Product;
@@ -73,5 +74,19 @@ public class ProductService {
 
     public List<Product> searchProduct(SearchProductInput input) {
         return productRepository.searchProducts(input.query());
+    }
+
+    public void decreaseStock(Long productId, int amount) {
+        Product product = productRepository.findById(productId).orElseThrow();
+        int stock = product.getStock();
+
+        if (stock >= amount) {
+            stock -= amount;
+        } else {
+            throw new AppException("Not enough stock");
+        }
+
+        product.setStock(stock);
+        productRepository.save(product);
     }
 }

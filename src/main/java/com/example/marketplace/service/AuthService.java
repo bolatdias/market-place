@@ -6,10 +6,13 @@ import com.example.marketplace.model.Role;
 import com.example.marketplace.model.RoleName;
 import com.example.marketplace.model.User;
 import com.example.marketplace.payload.CreateUserInput;
+
 import com.example.marketplace.payload.Token;
+import com.example.marketplace.payload.UserPayload;
 import com.example.marketplace.repository.RoleRepository;
 import com.example.marketplace.repository.UserRepository;
 import com.example.marketplace.security.JwtTokenProvider;
+import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.util.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -56,14 +59,23 @@ public class AuthService {
         return new Token(jwt);
     }
 
-    public User createUser(CreateUserInput input) {
+    public UserPayload createUser(CreateUserInput input) {
         User user = userMapper.createInputToModel(input);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new AppException("UserController Role not set."));
 
         user.setRoles(Collections.singleton(userRole));
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        return new UserPayload(user, "success");
     }
 
+
+    public User getUser(UserPrincipal userPrincipal) {
+         return userRepository.findById(userPrincipal.getId()).orElseThrow(
+                () -> new AppException("UserController User not set.")
+        );
+    }
 }

@@ -50,6 +50,9 @@ public class User extends DateAudit {
     @OneToMany
     private List<ProductRating> productRatings;
 
+    @OneToMany
+    private List<Cart> productsCart;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

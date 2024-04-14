@@ -13,11 +13,15 @@ type Query {
 
     categories:[Category]
     category(id:ID!):Category
+
+    cart:[Cart]
 }
 
 type Mutation {
-    createUser(input: CreateUserInput!): CreateUserPayload
+    createUser(input: CreateUserInput!): UserPayload
     rateProduct(input:ProductRatingInput):ProductRating
+    addProductToCart(input:AddToCartInput):Cart
+    purchaseCart:PurchasePayload
 }
 
 type Product{
@@ -33,6 +37,13 @@ type Product{
     rating:Float
 }
 
+type Cart {
+    id:ID!
+    product:Product
+    user:User
+    quantity:Int
+}
+
 input ProductRatingInput{
     rating:Int
     comment:String
@@ -43,7 +54,7 @@ input SearchProductInput{
     query:String
 }
 
-type ProductRating{
+type ProductRating implements DateAudit{
     rating:Int
     comment:String
     user:User
@@ -69,24 +80,31 @@ type Token{
 
 
 
-type CreateUserPayload{
+type UserPayload{
+    message:String
     user:User
 }
 
-
+type PurchasePayload{
+    message:String
+}
 input CreateUserInput{
     name:String
     username:String!
     email:String!
     password:String!
 }
-
-type User{
+input AddToCartInput{
+    productId:Int
+    quantity:Int
+}
+type User implements DateAudit{
     id:ID!
     name:String
     username:String!
     email:String!
     roles:[Role]
+    productsCart:[Cart]
     productRatings:[ProductRating]
     createdAt: Date
     updatedAt: Date
@@ -101,6 +119,11 @@ enum RoleName{
     ROLE_ADMIN
 }
 
+
+interface DateAudit{
+    createdAt:Date
+    updatedAt:Date
+}
 
 
 schema{

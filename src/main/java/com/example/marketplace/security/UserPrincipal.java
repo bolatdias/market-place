@@ -12,19 +12,19 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class UserPrincipal implements UserDetails {
-    private Long id;
+    private final Long id;
 
-    private String name;
+    private final String name;
 
-    private String username;
-
-    @JsonIgnore
-    private String email;
+    private final String username;
 
     @JsonIgnore
-    private String password;
+    private final String email;
 
-    private Collection<? extends GrantedAuthority> authorities;
+    @JsonIgnore
+    private final String password;
+
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public UserPrincipal(Long id, String name, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;

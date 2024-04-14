@@ -3,14 +3,10 @@ package com.example.marketplace.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.Formula;
-import org.springframework.data.jpa.repository.Query;
 
-import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity

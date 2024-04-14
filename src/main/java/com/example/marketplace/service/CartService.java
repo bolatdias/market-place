@@ -8,7 +8,6 @@ import com.example.marketplace.payload.AddToCartInput;
 import com.example.marketplace.payload.PurchasePayload;
 import com.example.marketplace.repository.CartRepository;
 import com.example.marketplace.repository.ProductRepository;
-import com.example.marketplace.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

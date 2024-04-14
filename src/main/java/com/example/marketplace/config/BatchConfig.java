@@ -38,7 +38,7 @@ import javax.sql.DataSource;
 public class BatchConfig {
 
 
-    private String inputProducts = "input/products.json";
+    private final String inputProducts = "input/products.json";
 
 
     @Autowired

@@ -3,10 +3,8 @@ package com.example.marketplace.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.checkerframework.common.aliasing.qual.Unique;
-
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Data

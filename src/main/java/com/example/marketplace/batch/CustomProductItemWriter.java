@@ -1,12 +1,8 @@
 package com.example.marketplace.batch;
 
-import com.example.marketplace.model.Product;
 import com.example.marketplace.payload.ProductBatch;
-import com.example.marketplace.repository.CategoryRepository;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;

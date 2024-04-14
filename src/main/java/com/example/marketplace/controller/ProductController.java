@@ -12,14 +12,11 @@ import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.service.ProductService;
 import com.example.marketplace.service.UserService;
 import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.BatchMapping;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.Currency;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class ProductController {

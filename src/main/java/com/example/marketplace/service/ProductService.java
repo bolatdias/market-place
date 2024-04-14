@@ -12,7 +12,6 @@ import com.example.marketplace.payload.SearchProductInput;
 import com.example.marketplace.repository.CategoryRepository;
 import com.example.marketplace.repository.ProductRatingRepository;
 import com.example.marketplace.repository.ProductRepository;
-import org.checkerframework.checker.units.qual.A;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

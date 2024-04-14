@@ -1,9 +1,7 @@
 package com.example.marketplace.payload;
 
 
-import com.example.marketplace.model.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import jakarta.persistence.*;
 import lombok.Data;
 
 @Data

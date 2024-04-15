@@ -47,11 +47,12 @@ public class User extends DateAudit {
     @Size(max = 100)
     private String password;
 
-    @OneToMany
-    private List<ProductRating> productRatings;
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Cart cart;
+
 
     @OneToMany
-    private List<Cart> productsCart;
+    private List<ProductRating> productRatings;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
@@ -65,4 +66,6 @@ public class User extends DateAudit {
         this.email = email;
         this.password = password;
     }
+
+
 }

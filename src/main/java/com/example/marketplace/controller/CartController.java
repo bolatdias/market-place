@@ -2,9 +2,10 @@ package com.example.marketplace.controller;
 
 
 import com.example.marketplace.model.Cart;
+import com.example.marketplace.model.CartProduct;
 import com.example.marketplace.model.User;
 import com.example.marketplace.payload.AddToCartInput;
-import com.example.marketplace.payload.PurchasePayload;
+import com.example.marketplace.payload.ApiResponse;
 import com.example.marketplace.security.CurrentUser;
 import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.service.AuthService;
@@ -15,8 +16,6 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
-import java.util.List;
-
 @Controller
 @RequiredArgsConstructor
 public class CartController {
@@ -25,15 +24,16 @@ public class CartController {
 
 
     @QueryMapping
-    public List<Cart> cart(
+    public Cart cart(
             @CurrentUser UserPrincipal currentUser
     ) {
-        return cartService.getCarts(currentUser.getId());
+        User user = authService.getUser(currentUser);
+        return new Cart(user);
     }
 
 
     @MutationMapping
-    public Cart addProductToCart(
+    public CartProduct addProductToCart(
             @Argument("input") AddToCartInput input,
             @CurrentUser UserPrincipal currentUser
     ) {
@@ -42,10 +42,17 @@ public class CartController {
     }
 
     @MutationMapping
-    public PurchasePayload purchaseCart(
+    public ApiResponse purchaseCart(
             @CurrentUser UserPrincipal userPrincipal
     ) {
         User user = authService.getUser(userPrincipal);
         return cartService.purchaseCart(user);
+    }
+
+    @MutationMapping
+    public ApiResponse cleanCart(
+            @CurrentUser UserPrincipal currentUser
+    ) {
+        return cartService.cleanCart(currentUser.getId());
     }
 }

@@ -14,14 +14,15 @@ type Query {
     categories:[Category]
     category(id:ID!):Category
 
-    cart:[Cart]
+    cart:Cart
 }
 
 type Mutation {
     createUser(input: CreateUserInput!): UserPayload
     rateProduct(input:ProductRatingInput):ProductRating
-    addProductToCart(input:AddToCartInput):Cart
-    purchaseCart:PurchasePayload
+    addProductToCart(input:AddToCartInput):CartProduct
+    purchaseCart:ApiResponse
+    cleanCart:ApiResponse
 }
 
 type Product{
@@ -37,10 +38,10 @@ type Product{
     rating:Float
 }
 
-type Cart {
+type CartProduct {
     id:ID!
     product:Product
-    user:User
+    cart:Cart
     quantity:Int
 }
 
@@ -88,6 +89,11 @@ type UserPayload{
 type PurchasePayload{
     message:String
 }
+
+type ApiResponse{
+    success:Boolean
+    message:String
+}
 input CreateUserInput{
     name:String
     username:String!
@@ -98,17 +104,25 @@ input AddToCartInput{
     productId:Int
     quantity:Int
 }
+
 type User implements DateAudit{
     id:ID!
     name:String
     username:String!
     email:String!
     roles:[Role]
-    productsCart:[Cart]
+    cart:Cart
     productRatings:[ProductRating]
     createdAt: Date
     updatedAt: Date
 }
+
+type Cart{
+    totalPrice:Int
+    cartProducts:[CartProduct]
+    user:User
+}
+
 type Role{
     id:ID!
     name:RoleName

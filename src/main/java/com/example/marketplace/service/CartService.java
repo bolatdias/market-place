@@ -7,7 +7,6 @@ import com.example.marketplace.model.CartProduct;
 import com.example.marketplace.model.Product;
 import com.example.marketplace.model.User;
 import com.example.marketplace.payload.AddToCartInput;
-import com.example.marketplace.payload.ApiResponse;
 import com.example.marketplace.repository.CartProductRepository;
 import com.example.marketplace.repository.CartRepository;
 import com.example.marketplace.repository.ProductRepository;
@@ -24,16 +23,16 @@ public class CartService {
     private final ProductService productService;
     private final CartProductRepository cartProductRepository;
 
-    public Cart getCarts(Long userId) {
-        return cartRepository.findAllByUserId(userId).orElse(null);
+    public Cart getCartByUserId(Long userId) {
+        return cartRepository.findCartByUserId(userId).orElse(null);
     }
 
 
     @Transactional
     public CartProduct addProductToCart(User user, AddToCartInput input) {
-        Cart cart = cartRepository.findAllByUserId(user.getId())
-                .orElse( cartRepository.save(new Cart(user)));
 
+        Cart cart = cartRepository.findCartByUserId(user.getId())
+                .orElseGet(() -> cartRepository.save(new Cart(user)));
 
         CartProduct cartProduct = cartProductRepository.findAllByUserIdAndProductId(user.getId(), input.productId())
                 .orElse(null);
@@ -42,51 +41,61 @@ public class CartService {
             cartProduct = new CartProduct();
 
             Product product = productRepository.findById(input.productId()).orElseThrow(
-                    () -> new ResourceNotFoundException("Product not founded", "id", input.productId())
+                    () -> new ResourceNotFoundException("Product not found", "id", input.productId())
             );
-
 
             cartProduct.setProduct(product);
             cartProduct.setCart(cart);
             cartProduct.setQuantity(input.quantity());
 
+            checkQuantity(input, cartProduct);
+            return cartProductRepository.save(cartProduct);
+
         } else {
             int quantity = cartProduct.getQuantity();
-            quantity = quantity + input.quantity();
+            quantity += input.quantity();
             cartProduct.setQuantity(quantity);
+
+            checkQuantity(input, cartProduct);
+            return cartProductRepository.save(cartProduct);
         }
+    }
 
 
+    private static void checkQuantity(AddToCartInput input, CartProduct cartProduct) {
         if (cartProduct.getProduct().getStock() < input.quantity()) {
             throw new AppException("Cart quantity exceeds stock");
         }
-
-        return cartProductRepository.save(cartProduct);
     }
 
 
     @Transactional
-    public ApiResponse purchaseCart(User user) {
-        Cart cart = cartRepository.findAllByUserId(user.getId()).orElseThrow(
+    public Cart purchaseCart(User user) {
+        Cart cart = cartRepository.findCartByUserId(user.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("Cart not founded", "id", user.getId())
         );
 
         for (CartProduct cartProduct : cart.getCartProducts()) {
             productService.decreaseStock(cartProduct.getProduct().getId(), cartProduct.getQuantity());
         }
-        cartProductRepository.deleteAll(cart.getCartProducts());
-        return new ApiResponse(true, "Successfully purchase cart");
+        return cart;
     }
 
 
-    public ApiResponse cleanCart(Long userId) {
-        Cart cart = cartRepository.findAllByUserId(userId).orElseThrow(
+    public void cleanCart(Long userId) {
+        Cart cart = cartRepository.findCartByUserId(userId).orElseThrow(
                 () -> new ResourceNotFoundException("Cart not founded", "id", userId)
         );
 
-        cartProductRepository.deleteAll(cart.getCartProducts());
+        try {
+            cartProductRepository.deleteAll(cart.getCartProducts());
+        } catch (Exception ex) {
+            System.out.println(ex);
+        }
 
-        return new ApiResponse(true, "Successfully clean up cary");
     }
 
+    public void cleanCart(Cart cart) {
+        cartProductRepository.deleteAll(cart.getCartProducts());
+    }
 }

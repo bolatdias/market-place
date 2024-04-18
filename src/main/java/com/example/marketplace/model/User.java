@@ -51,6 +51,11 @@ public class User extends DateAudit {
     private Cart cart;
 
 
+
+    @OneToMany
+    private List<Order> orders;
+
+
     @OneToMany
     private List<ProductRating> productRatings;
 

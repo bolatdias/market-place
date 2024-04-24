@@ -21,8 +21,24 @@ type Mutation {
     createUser(input: CreateUserInput!): UserPayload
     rateProduct(input:ProductRatingInput):ProductRating
     addProductToCart(input:AddToCartInput):CartProduct
-    purchaseCart:ApiResponse
     cleanCart:ApiResponse
+    createOrder(input:CreateOrderInput):Order
+}
+
+type Order implements DateAudit{
+    id:ID!
+    user:User
+    orderProducts:[OrderProduct]
+    address:String
+    createdAt:Date
+    updatedAt:Date
+}
+
+type OrderProduct {
+    id:ID!
+    order:Order
+    product:Product
+    quantity:Int
 }
 
 type Product{
@@ -51,6 +67,9 @@ input ProductRatingInput{
     rating:Int
     comment:String
     productId:Int
+}
+input CreateOrderInput{
+    address:String
 }
 
 input SearchProductInput{

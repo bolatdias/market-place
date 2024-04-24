@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CartProduct  implements ProductObject{
+public class OrderProduct implements ProductObject{
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,17 +19,16 @@ public class CartProduct  implements ProductObject{
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
     private int quantity;
 
     @ManyToOne
-    @JoinColumn(name = "cart_id")
+    @JoinColumn(name = "order_id")
     @JsonIgnore
-    private Cart cart;
+    private Order order;
 
-    public CartProduct(Product product, int quantity, Cart cart) {
+    public OrderProduct(Product product, int quantity, Order order) {
         this.product = product;
         this.quantity = quantity;
-        this.cart = cart;
+        this.order = order;
     }
 }

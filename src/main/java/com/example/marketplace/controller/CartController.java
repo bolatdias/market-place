@@ -10,6 +10,7 @@ import com.example.marketplace.security.CurrentUser;
 import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.service.AuthService;
 import com.example.marketplace.service.CartService;
+import com.example.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -20,14 +21,14 @@ import org.springframework.stereotype.Controller;
 @RequiredArgsConstructor
 public class CartController {
     private final CartService cartService;
-    private final AuthService authService;
+    private final UserService userService;
 
 
     @QueryMapping
     public Cart cart(
             @CurrentUser UserPrincipal currentUser
     ) {
-        User user = authService.getUser(currentUser);
+        User user = userService.getCurrentUser(currentUser);
         return new Cart(user);
     }
 
@@ -37,22 +38,15 @@ public class CartController {
             @Argument("input") AddToCartInput input,
             @CurrentUser UserPrincipal currentUser
     ) {
-        User user = authService.getUser(currentUser);
+        User user = userService.getCurrentUser(currentUser);
         return cartService.addProductToCart(user, input);
-    }
-
-    @MutationMapping
-    public ApiResponse purchaseCart(
-            @CurrentUser UserPrincipal userPrincipal
-    ) {
-        User user = authService.getUser(userPrincipal);
-        return cartService.purchaseCart(user);
     }
 
     @MutationMapping
     public ApiResponse cleanCart(
             @CurrentUser UserPrincipal currentUser
     ) {
-        return cartService.cleanCart(currentUser.getId());
+        cartService.cleanCart(currentUser.getId());
+        return new ApiResponse(true, "Cart successfully clean up");
     }
 }

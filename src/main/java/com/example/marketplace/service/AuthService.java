@@ -75,9 +75,4 @@ public class AuthService {
     }
 
 
-    public User getUser(UserPrincipal userPrincipal) {
-         return userRepository.findById(userPrincipal.getId()).orElseThrow(
-                () -> new AppException("UserController User not set.")
-        );
-    }
 }

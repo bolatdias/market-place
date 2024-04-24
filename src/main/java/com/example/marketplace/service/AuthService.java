@@ -2,9 +2,11 @@ package com.example.marketplace.service;
 
 
 import com.example.marketplace.exception.AppException;
+import com.example.marketplace.model.Company;
 import com.example.marketplace.model.Role;
 import com.example.marketplace.model.RoleName;
 import com.example.marketplace.model.User;
+import com.example.marketplace.payload.CreateCompanyInput;
 import com.example.marketplace.payload.CreateUserInput;
 
 import com.example.marketplace.payload.Token;

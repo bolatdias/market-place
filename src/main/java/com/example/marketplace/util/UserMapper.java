@@ -1,7 +1,9 @@
 package com.example.marketplace.util;
 
 
+import com.example.marketplace.model.Company;
 import com.example.marketplace.model.User;
+import com.example.marketplace.payload.CreateCompanyInput;
 import com.example.marketplace.payload.CreateUserInput;
 import org.springframework.stereotype.Component;
 
@@ -18,4 +20,12 @@ public class UserMapper {
         );
     }
 
+    public Company createInputToModel(CreateCompanyInput createInput) {
+        return new Company(
+                createInput.username(),
+                createInput.name(),
+                createInput.address(),
+                createInput.email()
+        );
+    }
 }

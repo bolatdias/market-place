@@ -36,6 +36,8 @@ type Product{
     images:[Image]
     productRatings:[ProductRating]
     rating:Float
+
+    ratingByUser:Int
 }
 
 type CartProduct {

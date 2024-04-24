@@ -18,6 +18,8 @@ public class UserPrincipal implements UserDetails {
 
     private final String username;
 
+    private boolean accountNonLocked = true;
+
     @JsonIgnore
     private final String email;
 
@@ -84,7 +86,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return accountNonLocked;
     }
 
     @Override

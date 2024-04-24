@@ -14,6 +14,7 @@ import com.example.marketplace.service.UserService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
 import java.util.List;
@@ -63,5 +64,17 @@ public class ProductController {
     public List<Product> searchProducts(
             @Argument("input") SearchProductInput input) {
         return productService.searchProduct(input);
+    }
+
+    @SchemaMapping(typeName = "Product", field = "ratingByUser")
+    public Integer ratingByUser(
+            @CurrentUser UserPrincipal currentUser,
+            Product product
+    ) {
+        if (currentUser == null) {
+            return null;
+        }
+
+        return productService.getRatingByUserId(currentUser.getId(), product.getId());
     }
 }

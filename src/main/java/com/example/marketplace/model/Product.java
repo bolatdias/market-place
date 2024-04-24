@@ -45,9 +45,10 @@ public class Product {
 
     @Formula("(SELECT AVG(pr.rating) FROM product_rating pr WHERE pr.product_id = id)")
     private Float rating;
+
+
 //    private double discountPercentage;
 
 //    private double rating;
 //    private String thumbnail;
-//    private String[] images;
 }

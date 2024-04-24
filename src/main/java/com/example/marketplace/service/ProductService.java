@@ -88,4 +88,8 @@ public class ProductService {
         product.setStock(stock);
         productRepository.save(product);
     }
+
+    public Integer getRatingByUserId(Long userId, Long productId) {
+        return productRatingRepository.getRatingByUserIdAndProductId(userId, productId).orElse(null);
+    }
 }

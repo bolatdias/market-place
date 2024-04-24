@@ -12,18 +12,23 @@ import com.example.marketplace.payload.SearchProductInput;
 import com.example.marketplace.repository.CategoryRepository;
 import com.example.marketplace.repository.ProductRatingRepository;
 import com.example.marketplace.repository.ProductRepository;
+import jakarta.persistence.EntityManager;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class ProductService {
+    private Logger logger = Logger.getLogger(ProductService.class.getName());
 
     @Autowired
     private ModelMapper modelMapper;
 
+    private EntityManager entityManager;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
@@ -89,7 +94,21 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public Integer getRatingByUserId(Long userId, Long productId) {
-        return productRatingRepository.getRatingByUserIdAndProductId(userId, productId).orElse(null);
+    public List<Integer> getRatingsByUserIdAndProductIds(Long userId, List<Long> productIds) {
+        List<Object[]> list = productRatingRepository.getRatingsByUserIdAndProductIds(userId, productIds);
+        Integer[] ratings = new Integer[productIds.size()];
+        Arrays.fill(ratings, 0);
+
+
+        for (Object[] o : list) {
+            Long productId = (Long) o[1];
+            Integer rating = (Integer) o[0];
+            int index = productIds.indexOf(productId); // Find the index of the productId in the original list
+            ratings[index] = rating; // Assign the rating at the corresponding index in the ratings array
+        }
+
+        logger.info(String.valueOf(ratings.length));
+
+        return Arrays.asList(ratings);
     }
 }

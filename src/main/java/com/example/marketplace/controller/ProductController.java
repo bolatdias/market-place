@@ -12,18 +12,21 @@ import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.service.ProductService;
 import com.example.marketplace.service.UserService;
 import org.springframework.graphql.data.method.annotation.Argument;
+import org.springframework.graphql.data.method.annotation.BatchMapping;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Controller
 public class ProductController {
 
     private final ProductService productService;
     private final UserService userService;
+    private Logger logger = Logger.getLogger(ProductController.class.getName());
 
     public ProductController(ProductService productService, UserService userService) {
         this.productService = productService;
@@ -66,15 +69,22 @@ public class ProductController {
         return productService.searchProduct(input);
     }
 
-    @SchemaMapping(typeName = "Product", field = "ratingByUser")
-    public Integer ratingByUser(
-            @CurrentUser UserPrincipal currentUser,
-            Product product
+
+    @BatchMapping(field = "ratingByUser", typeName = "Product")
+    public List<Integer> ratingByUser(
+            List<Product> product
     ) {
-        if (currentUser == null) {
+        User user = userService.getCurrentUser();
+        if (user == null) {
             return null;
         }
 
-        return productService.getRatingByUserId(currentUser.getId(), product.getId());
+        List<Long> productIds = new ArrayList<>();
+
+        for (Product p : product) {
+            productIds.add(p.getId());
+        }
+
+        return productService.getRatingsByUserIdAndProductIds(user.getId(), productIds);
     }
 }

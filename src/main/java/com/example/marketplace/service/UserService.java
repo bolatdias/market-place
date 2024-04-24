@@ -6,6 +6,8 @@ import com.example.marketplace.repository.UserRepository;
 import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.util.UserMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,4 +33,18 @@ public class UserService {
         return userRepository.findById(currentUser.getId()).orElseThrow();
     }
 
+    public User getCurrentUser() {
+        // Retrieve the Authentication object from the SecurityContextHolder
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        // Extract the principal from the Authentication object and cast it to UserPrincipal
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+        // Retrieve the user's ID from the UserPrincipal
+        Long userId = userPrincipal.getId();
+
+        // Fetch the user entity from the database using the UserRepository
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+    }
 }

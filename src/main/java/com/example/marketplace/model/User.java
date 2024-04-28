@@ -50,7 +50,8 @@ public class User extends DateAudit {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Cart cart;
 
-
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Company company;
 
     @OneToMany
     private List<Order> orders;

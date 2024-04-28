@@ -8,7 +8,6 @@ import com.example.marketplace.payload.AddToCartInput;
 import com.example.marketplace.payload.ApiResponse;
 import com.example.marketplace.security.CurrentUser;
 import com.example.marketplace.security.UserPrincipal;
-import com.example.marketplace.service.AuthService;
 import com.example.marketplace.service.CartService;
 import com.example.marketplace.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +28,7 @@ public class CartController {
             @CurrentUser UserPrincipal currentUser
     ) {
         User user = userService.getCurrentUser(currentUser);
-        return new Cart(user);
+        return user.getCart();
     }
 
 

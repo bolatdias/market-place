@@ -7,6 +7,7 @@ import com.example.marketplace.model.Category;
 import com.example.marketplace.model.Product;
 import com.example.marketplace.model.ProductRating;
 import com.example.marketplace.model.User;
+import com.example.marketplace.payload.CreateProductInput;
 import com.example.marketplace.payload.ProductRatingInput;
 import com.example.marketplace.payload.SearchProductInput;
 import com.example.marketplace.repository.CategoryRepository;
@@ -110,5 +111,23 @@ public class ProductService {
         logger.info(String.valueOf(ratings.length));
 
         return Arrays.asList(ratings);
+    }
+
+    public Product createProduct(CreateProductInput input, User user) {
+        Product product = new Product();
+
+        Category category = categoryRepository.findById((long) input.getCategory()).orElseThrow(
+                () -> new ResourceNotFoundException("ProductService", "id", input.getCategory())
+        );
+
+        product.setCategory(category);
+        product.setCompany(user.getCompany());
+
+
+        product.setTitle(input.getTitle());
+        product.setDescription(input.getDescription());
+        product.setPrice(input.getPrice());
+        product.setStock(input.getStock());
+        return productRepository.save(product);
     }
 }

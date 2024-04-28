@@ -18,6 +18,10 @@ import java.util.List;
         name = "Product.images",
         attributeNodes = @NamedAttributeNode("images")
 )
+@NamedEntityGraph(
+        name = "Product.company",
+        attributeNodes = @NamedAttributeNode("company")
+)
 @JsonIgnoreProperties(ignoreUnknown = true)
 
 public class Product {
@@ -34,7 +38,9 @@ public class Product {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    private String brand;
+    @ManyToOne
+    @JoinColumn(name = "company_id", nullable = false)
+    private Company company;
     private int stock;
 
     @OneToMany(mappedBy = "product")

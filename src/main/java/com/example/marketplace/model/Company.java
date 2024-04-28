@@ -1,31 +1,38 @@
 package com.example.marketplace.model;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
+import com.example.marketplace.model.audit.DateAudit;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+import java.util.List;
+
 @Entity
+@Table(name = "companies")
 @Data
 @NoArgsConstructor
 public class Company {
-
-    public Company(String username, String name, String address, String email) {
-        this.username = username;
-        this.name = name;
-        this.address = address;
-        this.email = email;
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username;
+
+    @NotBlank
+    @Size(max = 40)
     private String name;
     private String address;
-    private String email;
+
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @OneToMany(mappedBy = "company")
+    private List<Product> products;
+
+    public Company(String name, String address) {
+        this.name = name;
+        this.address = address;
+    }
 }

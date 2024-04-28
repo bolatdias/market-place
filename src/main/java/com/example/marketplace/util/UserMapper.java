@@ -22,10 +22,17 @@ public class UserMapper {
 
     public Company createInputToModel(CreateCompanyInput createInput) {
         return new Company(
-                createInput.username(),
                 createInput.name(),
-                createInput.address(),
-                createInput.email()
+                createInput.address()
+        );
+    }
+
+    public User createInputToUser(CreateCompanyInput createInput) {
+        return new User(
+                createInput.name(),
+                createInput.username(),
+                createInput.email(),
+                createInput.password()
         );
     }
 }

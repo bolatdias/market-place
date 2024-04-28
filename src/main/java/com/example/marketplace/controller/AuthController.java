@@ -1,5 +1,6 @@
 package com.example.marketplace.controller;
 
+import com.example.marketplace.payload.CreateCompanyInput;
 import com.example.marketplace.payload.CreateUserInput;
 import com.example.marketplace.payload.Token;
 import com.example.marketplace.payload.UserPayload;
@@ -29,4 +30,11 @@ public class AuthController {
             @Argument("password") String password) {
         return authService.authenticateUser(usernameOrEmail, password);
     }
+
+    @MutationMapping
+    public UserPayload createCompany(@Argument("input") CreateCompanyInput input) {
+        return authService.createCompany(input);
+    }
+
+
 }

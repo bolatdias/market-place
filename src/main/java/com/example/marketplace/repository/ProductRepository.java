@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @EntityGraph(attributePaths = {"category", "images"})
+    @EntityGraph(attributePaths = {"category", "images", "company"})
     List<Product> findAll();
 
 

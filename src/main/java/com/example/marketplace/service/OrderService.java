@@ -7,6 +7,7 @@ import com.example.marketplace.repository.OrderProductRepository;
 import com.example.marketplace.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class OrderService {
         Order order = orderRepository.save(new Order(user));
 
         Cart cart = cartService.purchaseCart(user);
+//        Cart cart = user.getCart();
 
         List<OrderProduct> orderProductList = new ArrayList<>();
         for (CartProduct cartProduct : cart.getCartProducts()) {
@@ -45,5 +47,4 @@ public class OrderService {
         cartService.cleanCart(user.getId());
         return orderRepository.save(order);
     }
-
 }

@@ -8,15 +8,15 @@ import com.example.marketplace.model.RoleName;
 import com.example.marketplace.model.User;
 import com.example.marketplace.payload.CreateCompanyInput;
 import com.example.marketplace.payload.CreateUserInput;
-
 import com.example.marketplace.payload.Token;
 import com.example.marketplace.payload.UserPayload;
+import com.example.marketplace.repository.CompanyRepository;
 import com.example.marketplace.repository.RoleRepository;
 import com.example.marketplace.repository.UserRepository;
 import com.example.marketplace.security.JwtTokenProvider;
-import com.example.marketplace.security.UserPrincipal;
 import com.example.marketplace.util.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,24 +27,16 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    @Autowired
-    AuthenticationManager authenticationManager;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
-
-    @Autowired
-    PasswordEncoder passwordEncoder;
-
-    @Autowired
-    JwtTokenProvider tokenProvider;
-
-    @Autowired
-    UserMapper userMapper;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider tokenProvider;
+    private final UserMapper userMapper;
+    private final CompanyRepository companyRepository;
 
     public Token authenticateUser(String usernameOrEmail, String password) {
 
@@ -63,16 +55,31 @@ public class AuthService {
 
     public UserPayload createUser(CreateUserInput input) {
         User user = userMapper.createInputToModel(input);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("UserController Role not set."));
-
-        user.setRoles(Collections.singleton(userRole));
-        userRepository.save(user);
+        insertUser(user, RoleName.ROLE_USER);
 
         return new UserPayload(user, "success");
     }
 
+    private void insertUser(User user, RoleName role) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        Role userRole = roleRepository.findByName(role)
+                .orElseThrow(() -> new AppException("UserController Role not set."));
+
+        user.setRoles(Collections.singleton(userRole));
+        userRepository.save(user);
+    }
+
+
+    @Transactional
+    public UserPayload createCompany(CreateCompanyInput input) {
+        User user = userMapper.createInputToUser(input);
+        insertUser(user, RoleName.ROLE_COMPANY);
+
+        Company company = userMapper.createInputToModel(input);
+        company.setUser(user);
+        companyRepository.save(company);
+        return new UserPayload(user, "success");
+    }
 
 }

@@ -2,33 +2,33 @@
 
 ## Overview
 
-This project is a pet project for a marketplace platform developed by a Java developer. The application leverages various technologies including Spring Boot, PostgreSQL, GraphQL, and Git.
+This project is a pet project for a marketplace platform created by a Java developers. The application leverages several technologies such as Spring Boot, PostgreSQL, GraphQL, and Git.
 
 ## Technologies Used
 
-- **Java**: The main programming language used for development.
-- **Spring Boot**: A framework for building stand-alone, production-grade Spring-based applications.
-- **PostgreSQL**: A powerful, open-source object-relational database system.
-- **GraphQL**: A query language for your API, providing a more efficient and flexible alternative to REST.
-- **Git**: Version control system to manage and track changes in the source code.
+- **Java**: The primary programming language used for development.
+- **Spring Boot**: A framework for building standalone, production-ready Spring-based applications.
+- **PostgreSQL**: A powerful, open-source object-relational database management system.
+- **GraphQL**: A query language for your API, offering a more efficient and flexible alternative to REST.
+- **Git**: A version control system to manage and track changes in the source code.
 
 ## Features
 
-1. **Registration and Authentication**: 
-   - Implemented using JWT (JSON Web Tokens) to ensure security and manage access control.
-   - Users can sign up and log in securely.
+1. **Registration and Authentication**:
+   - Implemented using JWT (JSON Web Tokens) to enhance security and manage access control.
+   - Allows users to securely sign up and log in.
 
 2. **Purchases and Orders**:
    - Users can add products to their cart, place orders, and specify delivery addresses.
-   - Streamlined order processing and management system.
+   - A streamlined order processing and management system.
 
 3. **Reviews and Ratings**:
    - Users can leave ratings and comments on products.
-   - Helps other users make informed decisions based on feedback.
+   - Assists other users in making informed decisions based on feedback.
 
 4. **GraphQL API**:
    - Provides flexibility and efficiency in client-server interactions.
-   - Allows clients to request only the data they need, reducing payload size and improving performance.
+   - Enables clients to request only the data they need, reducing payload size and improving performance.
 
 ## Getting Started
 
